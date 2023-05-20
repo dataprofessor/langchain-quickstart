@@ -1,21 +1,19 @@
-# 📦 Streamlit App Starter Kit 
+# 🦜🔗 Langchain - Quickstart App
 ```
-⬆️ (Replace above with your app's name)
+Quickstart App built using Langchain and Streamlit
 ```
 
-Description of the app ...
+## Overview of the App
+- Accepts input text as prompt input using Streamlit's `st.text_area()`
+- LLM is applied on the prompt input to generate a response.
 
 ## Demo App
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://starter-kit.streamlitapp.com/)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://langchain-text-summarization.streamlit.app/)
 
-## Section Heading
+## Get an OpenAI API key
 
-This is filler text, please replace this with text for this section.
-
-## Further Reading
-
-This is filler text, please replace this with a explanatory text about further relevant resources for this repo
-- Resource 1
-- Resource 2
-- Resource 3
+You can get your own OpenAI API key by following the following instructions:
+1. Go to https://platform.openai.com/account/api-keys.
+2. Click on the `+ Create new secret key` button.
+3. Next, enter an identifier name (optional) and click on the `Create secret key` button.
