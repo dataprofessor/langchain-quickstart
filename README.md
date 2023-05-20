@@ -5,7 +5,7 @@ Quickstart App built using Langchain and Streamlit
 
 ## Overview of the App
 - Accepts input text as prompt input using Streamlit's `st.text_area()`
-- LLM is applied on the prompt input to generate a response.
+- LLM model (`llm()` is applied on the prompt input `text` to generate a response via `llm(text)`
 
 ## Demo App
 
