@@ -4,8 +4,11 @@ from langchain import OpenAI
 
 st.title('🦜🔗 Quickstart App')
 
-def generate_response(input_text):
+if 'OPENAI_API_KEY' in st.secrets:
+  st.success('Key is provided!', icon='🔑')
   os.environ['OPENAI_API_KEY'] = st.secrets['OPENAI_API_KEY']
+
+def generate_response(input_text):
   llm = OpenAI(temperature=0.7)
   st.info(llm(input_text))
 
