@@ -5,7 +5,8 @@ from langchain import OpenAI
 st.title('🦜🔗 Quickstart App')
 
 api_key = st.text_input('Enter OpenAI API key:', type='password')
-os.environ['OPENAI_API_KEY'] = api_key
+if api_key:
+  os.environ['OPENAI_API_KEY'] = api_key
 
 with st.form('my_form'):
   llm = OpenAI(temperature=0.7)
