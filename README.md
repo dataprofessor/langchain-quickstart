@@ -21,7 +21,7 @@ You can get your own OpenAI API key by following the following instructions:
 ## Enter the OpenAI API key in Streamlit Community Cloud
 
 To set the OpenAI API key as an environment variable in Streamlit apps, do the following:
-1. At the lower right corner, click on `< Manage app` then click on the vertical "..." followed by clickin on `Settings`.
+1. At the lower right corner, click on `< Manage app` then click on the vertical "..." followed by clicking on `Settings`.
 2. This brings the **App settings**, next click on the `Secrets` tab and paste the API key into the text box as follows:
 ```
 OPENAI_API_KEY='xxxxxxxxxx'
