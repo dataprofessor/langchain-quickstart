@@ -5,7 +5,9 @@ st.title('🦜🔗 Quickstart App')
 
 if 'OPENAI_API_KEY' in st.secrets:
   st.success('API Key is provided!', icon='🔑')
-
+else:
+  st.error('Please enter API Key in Secrets!', icon='⚠️')
+  
 def generate_response(input_text):
   llm = OpenAI(temperature=0.7)
   st.info(llm(input_text))
