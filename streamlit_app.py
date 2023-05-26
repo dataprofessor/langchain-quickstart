@@ -1,5 +1,4 @@
 import streamlit as st
-import os
 from langchain import OpenAI
 
 st.title('🦜🔗 Quickstart App')
