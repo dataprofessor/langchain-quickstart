@@ -5,7 +5,7 @@ Quickstart App built using Langchain and Streamlit
 
 ## Overview of the App
 - Accepts input text (*e.g.* `What are 3 key advice for learning how to code?`) as prompt input using Streamlit's `st.text_area()`, then assign this to the `text` variable.
-- LLM model (`llm()` is applied on the prompt input `text` to generate a response via `llm(text)`
+- LLM model is called via `llm()` and it is applied on the prompt input `text` to generate a response via `llm(text)`
 
 ## Demo App
 
