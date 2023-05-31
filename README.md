@@ -1,7 +1,6 @@
 # 🦜🔗 Langchain - Quickstart App
-```
-Quickstart App built using Langchain and Streamlit
-```
+
+Build your first LLM powered app with Langchain and Streamlit.
 
 <img src="diagram.jpg" width="75%">
 
