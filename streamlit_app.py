@@ -1,7 +1,7 @@
 import streamlit as st
 import os
 from dotenv import load_dotenv
-from langchain.llms import OpenAI
+from langchain.schema import HumanMessage
 from supabase.client import Client, create_client
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.vectorstores.supabase import SupabaseVectorStore
@@ -10,12 +10,12 @@ from langchain.retrievers.contextual_compression import ContextualCompressionRet
 from langchain.retrievers.document_compressors import EmbeddingsFilter
 from langchain.document_transformers import LongContextReorder
 from langchain.chat_models import ChatOpenAI
-# from langchain.chat_models import OpenAI
 from langchain.chains import ConversationalRetrievalChain, RetrievalQA
 from langchain.retrievers import RePhraseQueryRetriever
 from langchain.memory import ConversationBufferMemory
 # from langchain.text_splitter import CharacterTextSplitter
 # from langchain.document_transformers import EmbeddingsRedundantFilter
+from stream_handler import StreamHandler
 
 load_dotenv()
 
@@ -62,22 +62,30 @@ def get_retriever(vector_store: SupabaseVectorStore):
 
   return compression_retriever
 
-def get_qa_chain(compression_retriever: ContextualCompressionRetriever):
+def get_qa_chain(compression_retriever: ContextualCompressionRetriever, chat_box):
   # Instantiate ConversationBufferMemory
   memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True, output_key='answer')
 
-  llm = ChatOpenAI(temperature=0.3, model='gpt-4-1106-preview')
+  stream_handler = StreamHandler(chat_box, display_method='write')
+  llm = ChatOpenAI(temperature=0.3, model='gpt-4-1106-preview', streaming=True, callbacks=[stream_handler])
 
   qa = ConversationalRetrievalChain.from_llm(llm=llm, retriever=compression_retriever, memory=memory, return_source_documents=True)
 
   return qa
 
-def generate_response(input_text):
+def generate_response(input_text, chat_box):
   vectorstore = get_vectorstore()
   compression_retriever = get_retriever(vectorstore)
-  qa_chain = get_qa_chain(compression_retriever)
+  qa_chain = get_qa_chain(compression_retriever, chat_box)
 
-  st.info(qa_chain({ "question": input_text }))
+  result = qa_chain({ "question": input_text })
+
+  st.markdown(result['answer'])
+
+
+  if result['source_documents']:
+    for document in result['source_documents']:
+      st.markdown(document['page_content'])
 
 with st.form('my_form'):
   text = st.text_area('Enter text:', 'How do I set a gradient from teal to blue to purple to a full page background?')
@@ -85,4 +93,5 @@ with st.form('my_form'):
   if not openai_api_key.startswith('sk-'):
     st.warning('Please enter your OpenAI API key!', icon='⚠')
   if submitted and openai_api_key.startswith('sk-'):
-    generate_response(text)
+    chat_box = st.empty()
+    generate_response(text, chat_box)
