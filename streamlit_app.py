@@ -19,10 +19,10 @@ from langchain.memory import ConversationBufferMemory
 
 load_dotenv()
 
-st.set_page_config(page_title="🦜🔗 Quickstart App")
-st.title('🦜🔗 Quickstart App')
+st.set_page_config(page_title="🦜🔗 WhatsUpDoc")
+st.title('🦜🔗 WhatsUpDoc')
 
-openai_api_key = st.sidebar.text_input('OpenAI API Key')
+openai_api_key = os.environ.get("OPENAI_API_KEY") or st.sidebar.text_input('OpenAI API Key')
 
 supabase_url = os.environ.get("SUPABASE_URL")
 supabase_key = os.environ.get("SUPABASE_SERVICE_KEY")
@@ -66,23 +66,13 @@ def get_qa_chain(compression_retriever: ContextualCompressionRetriever):
   # Instantiate ConversationBufferMemory
   memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True, output_key='answer')
 
-  DEFAULT_TEMPLATE = """You are an assistant tasked with taking a natural language \
-  query from a user and converting it into a query for a vectorstore. \
-  In this process, you strip out information that is not relevant for \
-  the retrieval task. Here is the user query: {question}"""
-
-  llm = ChatOpenAI(temperature=0)
-  # retriever_from_llm = RePhraseQueryRetriever.from_llm(
-  #     retriever=compression_retriever, llm=llm
-  # )
-  # docs = retriever_from_llm.get_relevant_documents("How do I load documents from Hacker News?")
+  llm = ChatOpenAI(temperature=0.3, model='gpt-4-1106-preview')
 
   qa = ConversationalRetrievalChain.from_llm(llm=llm, retriever=compression_retriever, memory=memory, return_source_documents=True)
 
   return qa
 
 def generate_response(input_text):
-  # llm = OpenAI(temperature=0.7, openai_api_key=openai_api_key)
   vectorstore = get_vectorstore()
   compression_retriever = get_retriever(vectorstore)
   qa_chain = get_qa_chain(compression_retriever)
@@ -90,7 +80,7 @@ def generate_response(input_text):
   st.info(qa_chain({ "question": input_text }))
 
 with st.form('my_form'):
-  text = st.text_area('Enter text:', 'What are the three key pieces of advice for learning how to code?')
+  text = st.text_area('Enter text:', 'How do I set a gradient from teal to blue to purple to a full page background?')
   submitted = st.form_submit_button('Submit')
   if not openai_api_key.startswith('sk-'):
     st.warning('Please enter your OpenAI API key!', icon='⚠')
