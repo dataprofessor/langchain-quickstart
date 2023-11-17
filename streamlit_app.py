@@ -19,8 +19,31 @@ from stream_handler import StreamHandler
 
 load_dotenv()
 
-st.set_page_config(page_title="🦜🔗 WhatsUpDoc")
-st.title('🦜🔗 WhatsUpDoc')
+st.set_page_config(page_title="🐇 WhatsUpDoc")
+st.title('🐇 WhatsUpDoc')
+st.sidebar.title('🐇 WhatsUpDoc')
+
+st.sidebar.markdown('WhatsUpDoc is a **search engine** for your tech stack\'s documentation and broader knowledge base. It uses **OpenAI** to understand your questions and **Langchain** to search your tech stack\'s documentation and broader knowledge base.')
+
+tech_stack_table_name = {
+  'Tailwind CSS': 'tailwind_documents',
+  'NextJS': 'nextjs_documents',
+  'Stripe SDK': 'stripe_documents',
+  'Langchain SDK': 'langchain_documents',
+  'Supabase SDK': 'supabase_documents',
+}
+
+with st.sidebar:
+  st.markdown('This is a **demo** of the WhatsUpDoc app. Please enter your OpenAI API key below to get started.')
+  st.markdown('The app is currently in **alpha** and is under active development.')
+
+  st.divider()
+
+  tech_stack = st.selectbox(label="Choose Tech", help='Search the Documentation and Broader Knowledge Base of Your Tech Stack. ', options=('Tailwind CSS', 'NextJS', 'Stripe SDK', 'Langchain SDK', 'Supabase SDK'), label_visibility='visible')
+
+  st.divider()
+
+  st.text_input('Join the waitlist for early access to the app:', placeholder='e.g. kellyslater@gmail.com')
 
 openai_api_key = os.environ.get("OPENAI_API_KEY") or st.sidebar.text_input('OpenAI API Key')
 
@@ -35,8 +58,8 @@ def get_vectorstore():
     embedding=embeddings,
     client=supabase,
     chunk_size=100,
-    table_name="tailwind_documents",
-    query_name="match_tailwind_documents",
+    table_name=tech_stack_table_name[tech_stack],
+    query_name=f"match_{tech_stack_table_name[tech_stack]}",
   )
 
   return vector_store
@@ -86,6 +109,9 @@ def generate_response(input_text, chat_box):
   if result['source_documents']:
     for document in result['source_documents']:
       st.markdown(document['page_content'])
+
+
+st.title(tech_stack)
 
 with st.form('my_form'):
   text = st.text_area('Enter text:', 'How do I set a gradient from teal to blue to purple to a full page background?')
